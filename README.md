@@ -295,5 +295,6 @@ For support and questions:
 
 ---
 
-**JobPortal** - Connecting talented professionals with amazing opportunities! 🚀 #   j o b - p o r t a l  
+**JobPortal** - Connecting talented professionals with amazing opportunities! 🚀 #   j o b - p o r t a l 
+ 
  
