@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block title %}Employer Dashboard - JobPortal{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Dashboard Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="fw-bold">
+                        <i class="fas fa-briefcase me-2"></i>Employer Dashboard
+                    </h2>
+                    <p class="text-muted">Manage your job postings and applications</p>
+                </div>
+                <a href="{% url 'job_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Post New Job
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-5">
+        <div class="col-md-4 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-file-alt fa-2x mb-3"></i>
+                    <h3 class="fw-bold">{{ posted_jobs.count }}</h3>
+                    <p class="mb-0">Total Jobs Posted</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-2x mb-3"></i>
+                    <h3 class="fw-bold">
+                        {% with total_applications=0 %}
+                        {% for job in posted_jobs %}
+                        {% with applications_count=job.get_applications_count %}
+                        {% if applications_count %}
+                        {% with total_applications=total_applications|add:applications_count %}{% endwith %}
+                        {% endif %}
+                        {% endwith %}
+                        {% endfor %}
+                        {{ total_applications }}
+                        {% endwith %}
+                    </h3>
+                    <p class="mb-0">Total Applications</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-eye fa-2x mb-3"></i>
+                    <h3 class="fw-bold">{{ posted_jobs.count }}</h3>
+                    <p class="mb-0">Active Jobs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Job Listings -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list me-2"></i>Your Job Postings
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if posted_jobs %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Job Title</th>
+                                    <th>Company</th>
+                                    <th>Location</th>
+                                    <th>Applications</th>
+                                    <th>Status</th>
+                                    <th>Posted</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for job in posted_jobs %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'job_detail' job.pk %}" class="text-decoration-none fw-bold">
+                                            {{ job.title }}
+                                        </a>
+                                    </td>
+                                    <td>{{ job.company_name }}</td>
+                                    <td>
+                                        <i class="fas fa-map-marker-alt text-muted me-1"></i>
+                                        {{ job.location }}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">{{ job.get_applications_count }}</span>
+                                    </td>
+                                    <td>
+                                        {% if job.is_active %}
+                                        <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">{{ job.created_at|date:"M d, Y" }}</small>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'job_detail' job.pk %}"
+                                                class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{% url 'job_applications' job.pk %}"
+                                                class="btn btn-outline-info btn-sm">
+                                                <i class="fas fa-users"></i>
+                                            </a>
+                                            <a href="{% url 'job_update' job.pk %}"
+                                                class="btn btn-outline-warning btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'job_delete' job.pk %}"
+                                                class="btn btn-outline-danger btn-sm"
+                                                onclick="return confirm('Are you sure you want to delete this job?')">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-briefcase fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No jobs posted yet</h5>
+                        <p class="text-muted mb-4">Start by posting your first job to attract talented candidates.</p>
+                        <a href="{% url 'job_create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Post Your First Job
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <a href="{% url 'job_create' %}" class="btn btn-primary w-100">
+                                <i class="fas fa-plus me-2"></i>Post New Job
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a href="{% url 'job_list' %}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-search me-2"></i>Browse All Jobs
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a href="{% url 'profile' %}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-user me-2"></i>Edit Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

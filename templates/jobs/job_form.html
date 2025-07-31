@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+{% if form.instance.pk %}Edit Job{% else %}Post New Job{% endif %} - JobPortal
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-briefcase fa-3x text-primary mb-3"></i>
+                        <h2 class="fw-bold">
+                            {% if form.instance.pk %}
+                            <i class="fas fa-edit me-2"></i>Edit Job
+                            {% else %}
+                            <i class="fas fa-plus me-2"></i>Post New Job
+                            {% endif %}
+                        </h2>
+                        <p class="text-muted">
+                            {% if form.instance.pk %}
+                            Update your job posting to attract more candidates
+                            {% else %}
+                            Create a compelling job posting to attract talented candidates
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Please correct the errors below.
+                        </div>
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.title|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.company_name|as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.location|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.job_type|as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.experience_level|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.salary_min|as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.salary_max|as_crispy_field }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.description|as_crispy_field }}
+                        </div>
+
+                        <div class="mb-4">
+                            {{ form.requirements|as_crispy_field }}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                {% if form.instance.pk %}
+                                <i class="fas fa-save me-2"></i>Update Job
+                                {% else %}
+                                <i class="fas fa-paper-plane me-2"></i>Post Job
+                                {% endif %}
+                            </button>
+                            <a href="{% url 'employer_dashboard' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

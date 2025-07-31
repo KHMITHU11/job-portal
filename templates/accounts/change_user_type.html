@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Change Account Type - JobPortal{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-exchange-alt fa-3x text-primary mb-3"></i>
+                        <h2 class="fw-bold">Change Account Type</h2>
+                        <p class="text-muted">Switch between employer and applicant roles</p>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Current Account Type:</strong> {{ user.profile.get_user_type_display }}
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Select New Account Type:</label>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-briefcase fa-2x text-primary mb-3"></i>
+                                            <h5>Employer</h5>
+                                            <p class="text-muted small">Post jobs and hire candidates</p>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="user_type"
+                                                    value="employer" id="employer" {% if
+                                                    user.profile.user_type=='employer' %}checked{% endif %}>
+                                                <label class="form-check-label" for="employer">
+                                                    Select Employer
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-user-tie fa-2x text-success mb-3"></i>
+                                            <h5>Applicant</h5>
+                                            <p class="text-muted small">Search and apply for jobs</p>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="user_type"
+                                                    value="applicant" id="applicant" {% if
+                                                    user.profile.user_type=='applicant' %}checked{% endif %}>
+                                                <label class="form-check-label" for="applicant">
+                                                    Select Applicant
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-2"></i>Update Account Type
+                            </button>
+                            <a href="{% url 'profile' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Profile
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

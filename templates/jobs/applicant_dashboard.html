@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+
+{% block title %}Applicant Dashboard - JobPortal{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Dashboard Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="fw-bold">
+                        <i class="fas fa-user-tie me-2"></i>Applicant Dashboard
+                    </h2>
+                    <p class="text-muted">Track your job applications and find new opportunities</p>
+                </div>
+                <a href="{% url 'job_list' %}" class="btn btn-primary">
+                    <i class="fas fa-search me-2"></i>Find Jobs
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-5">
+        <div class="col-md-4 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-paper-plane fa-2x mb-3"></i>
+                    <h3 class="fw-bold">{{ applications.count }}</h3>
+                    <p class="mb-0">Applications Submitted</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-2x mb-3"></i>
+                    <h3 class="fw-bold">
+                        {% with pending_count=0 %}
+                        {% for application in applications %}
+                        {% if application.status == 'pending' %}
+                        {% with pending_count=pending_count|add:1 %}{% endwith %}
+                        {% endif %}
+                        {% endfor %}
+                        {{ pending_count }}
+                        {% endwith %}
+                    </h3>
+                    <p class="mb-0">Pending Review</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-check-circle fa-2x mb-3"></i>
+                    <h3 class="fw-bold">
+                        {% with shortlisted_count=0 %}
+                        {% for application in applications %}
+                        {% if application.status == 'shortlisted' %}
+                        {% with shortlisted_count=shortlisted_count|add:1 %}{% endwith %}
+                        {% endif %}
+                        {% endfor %}
+                        {{ shortlisted_count }}
+                        {% endwith %}
+                    </h3>
+                    <p class="mb-0">Shortlisted</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Listings -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list me-2"></i>Your Applications
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if applications %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Job Title</th>
+                                    <th>Company</th>
+                                    <th>Applied Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for application in applications %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'job_detail' application.job.pk %}"
+                                            class="text-decoration-none fw-bold">
+                                            {{ application.job.title }}
+                                        </a>
+                                    </td>
+                                    <td>{{ application.job.company_name }}</td>
+                                    <td>
+                                        <small class="text-muted">{{ application.applied_at|date:"M d, Y" }}</small>
+                                    </td>
+                                    <td>
+                                        {% if application.status == 'pending' %}
+                                        <span class="badge bg-warning">Pending</span>
+                                        {% elif application.status == 'reviewed' %}
+                                        <span class="badge bg-info">Reviewed</span>
+                                        {% elif application.status == 'shortlisted' %}
+                                        <span class="badge bg-success">Shortlisted</span>
+                                        {% elif application.status == 'rejected' %}
+                                        <span class="badge bg-danger">Rejected</span>
+                                        {% elif application.status == 'accepted' %}
+                                        <span class="badge bg-success">Accepted</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'job_detail' application.job.pk %}"
+                                                class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{% url 'application_detail' application.pk %}"
+                                                class="btn btn-outline-info btn-sm">
+                                                <i class="fas fa-file-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-paper-plane fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No applications yet</h5>
+                        <p class="text-muted mb-4">Start applying to jobs to track your applications here.</p>
+                        <a href="{% url 'job_list' %}" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i>Find Jobs to Apply
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <a href="{% url 'job_list' %}" class="btn btn-primary w-100">
+                                <i class="fas fa-search me-2"></i>Find Jobs
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a href="{% url 'profile' %}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-user me-2"></i>Edit Profile
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a href="{% url 'change_user_type' %}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-exchange-alt me-2"></i>Change Account Type
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Status Guide -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Application Status Guide
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-warning me-2">Pending</span>
+                                <small class="text-muted">Under review</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-info me-2">Reviewed</span>
+                                <small class="text-muted">Application reviewed</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-success me-2">Shortlisted</span>
+                                <small class="text-muted">Selected for interview</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-danger me-2">Rejected</span>
+                                <small class="text-muted">Not selected</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

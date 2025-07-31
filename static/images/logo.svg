@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="45" fill="url(#grad1)" stroke="#fff" stroke-width="2"/>
+  
+  <!-- Briefcase icon -->
+  <rect x="25" y="35" width="50" height="30" rx="3" fill="#fff" opacity="0.9"/>
+  <rect x="35" y="25" width="30" height="15" rx="2" fill="#fff" opacity="0.9"/>
+  
+  <!-- Lines representing documents -->
+  <line x1="30" y1="42" x2="70" y2="42" stroke="#667eea" stroke-width="1.5"/>
+  <line x1="30" y1="48" x2="60" y2="48" stroke="#667eea" stroke-width="1.5"/>
+  <line x1="30" y1="54" x2="65" y2="54" stroke="#667eea" stroke-width="1.5"/>
+  
+  <!-- Small dots for decoration -->
+  <circle cx="20" cy="20" r="2" fill="#fff" opacity="0.6"/>
+  <circle cx="80" cy="25" r="2" fill="#fff" opacity="0.6"/>
+  <circle cx="75" cy="75" r="2" fill="#fff" opacity="0.6"/>
+  <circle cx="25" cy="80" r="2" fill="#fff" opacity="0.6"/>
+</svg> 
